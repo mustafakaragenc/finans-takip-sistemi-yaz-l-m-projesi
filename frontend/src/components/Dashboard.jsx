@@ -6,6 +6,7 @@ export default function Dashboard() {
     const [budgetLimits, setBudgetLimits] = useState([]);
     const [transactions, setTransactions] = useState([]);
     const [loading, setLoading] = useState(true);
+    const userRole = localStorage.getItem('user_role');
 
     useEffect(() => {
         fetchData();
@@ -118,6 +119,7 @@ export default function Dashboard() {
                         <thead>
                             <tr>
                                 <th>Tarih</th>
+                                {(userRole === 'FamilyLeader' || userRole === 'Admin') && <th>Kişi</th>}
                                 <th>Tür</th>
                                 <th>Kategori</th>
                                 <th>Açıklama</th>
@@ -128,6 +130,7 @@ export default function Dashboard() {
                             {transactions.slice(0, 5).map(t => (
                                 <tr key={t.transaction_id}>
                                     <td>{new Date(t.transaction_date).toLocaleDateString('tr-TR')}</td>
+                                    {(userRole === 'FamilyLeader' || userRole === 'Admin') && <td>{t.user_fullname || 'Bilinmeyen'}</td>}
                                     <td><span className={`badge ${t.transaction_type === 'Income' ? 'badge-income' : 'badge-expense'}`}>
                                         {t.transaction_type === 'Income' ? 'Gelir' : 'Gider'}
                                     </span></td>

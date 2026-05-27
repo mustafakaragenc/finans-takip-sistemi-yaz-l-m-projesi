@@ -8,6 +8,7 @@ export default function TransactionList() {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [editingId, setEditingId] = useState(null);
+    const userRole = localStorage.getItem('user_role');
 
     const [formData, setFormData] = useState({
         categoryId: '1',
@@ -161,6 +162,7 @@ export default function TransactionList() {
                         <thead>
                             <tr>
                                 <th>Tarih</th>
+                                {(userRole === 'FamilyLeader' || userRole === 'Admin') && <th>Kişi</th>}
                                 <th>Tür</th>
                                 <th>Kategori</th>
                                 <th>Açıklama</th>
@@ -172,6 +174,7 @@ export default function TransactionList() {
                             {transactions.map(t => (
                                 <tr key={t.transaction_id}>
                                     <td>{new Date(t.transaction_date).toLocaleDateString('tr-TR')}</td>
+                                    {(userRole === 'FamilyLeader' || userRole === 'Admin') && <td>{t.user_fullname || 'Bilinmeyen'}</td>}
                                     <td><span className={`badge ${t.transaction_type === 'Income' ? 'badge-income' : 'badge-expense'}`}>{t.transaction_type === 'Income' ? 'Gelir' : 'Gider'}</span></td>
                                     <td>{t.category_name || `Kategori ${t.category_id}`}</td>
                                     <td>{t.description}</td>

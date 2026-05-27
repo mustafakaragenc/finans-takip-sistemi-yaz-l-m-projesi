@@ -74,5 +74,63 @@ def get_group_members(group_id):
     return jsonify([{
         'member_id': m.member_id,
         'user_id': m.user_id,
+        'username': m.user.username if m.user else 'Bilinmeyen',
+        'fullname': f"{m.user.first_name} {m.user.last_name}" if m.user else 'Bilinmeyen',
         'joined_at': m.joined_at.isoformat()
     } for m in members]), 200
+
+@family_bp.route('/groups', methods=['GET'])
+@jwt_required()
+def get_family_groups():
+    """Kullanıcının üye olduğu veya yönettiği aile gruplarını listele"""
+    try:
+        user_id = get_jwt_identity()
+        user = User.query.get(user_id)
+        
+        if user.role == 'FamilyLeader' or user.role == 'Admin':
+            groups = FamilyGroup.query.filter_by(leader_id=user_id).all()
+        else:
+            memberships = FamilyMember.query.filter_by(user_id=user_id).all()
+            group_ids = [m.group_id for m in memberships]
+            groups = FamilyGroup.query.filter(FamilyGroup.group_id.in_(group_ids)).all() if group_ids else []
+            
+        return jsonify([{
+            'group_id': g.group_id,
+            'group_name': g.group_name,
+            'leader_id': g.leader_id,
+            'description': g.description,
+            'created_at': g.created_at.isoformat(),
+            'members': [{
+                'user_id': m.user_id,
+                'username': m.user.username if m.user else 'Bilinmeyen',
+                'fullname': f"{m.user.first_name} {m.user.last_name}" if m.user else 'Bilinmeyen'
+            } for m in g.members]
+        } for g in groups]), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@family_bp.route('/eligible-users', methods=['GET'])
+@jwt_required()
+def get_eligible_users():
+    """Aileye eklenebilecek bağımsız kullanıcıları listele"""
+    try:
+        taken_members = FamilyMember.query.all()
+        taken_user_ids = [m.user_id for m in taken_members]
+        
+        leaders = FamilyGroup.query.all()
+        leader_ids = [l.leader_id for l in leaders]
+        
+        exclude_ids = set(taken_user_ids + leader_ids)
+        
+        users = User.query.filter(User.role == 'Individual')
+        if exclude_ids:
+            users = users.filter(~User.user_id.in_(exclude_ids))
+            
+        return jsonify([{
+            'user_id': u.user_id,
+            'username': u.username,
+            'fullname': f"{u.first_name} {u.last_name}",
+            'email': u.email
+        } for u in users.all()]), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500

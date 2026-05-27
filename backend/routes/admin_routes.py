@@ -72,16 +72,31 @@ def get_all_users():
             return jsonify({'error': 'Yalnızca Adminler kullanıcıları görebilir'}), 403
         
         users = User.query.all()
+        from models import Transaction
         
-        return jsonify([{
-            'user_id': u.user_id,
-            'username': u.username,
-            'email': u.email,
-            'role': u.role,
-            'first_name': u.first_name,
-            'last_name': u.last_name,
-            'created_at': u.created_at.isoformat()
-        } for u in users]), 200
+        response_data = []
+        for u in users:
+            income = db.session.query(db.func.sum(Transaction.amount)).filter_by(
+                user_id=u.user_id, transaction_type='Income'
+            ).scalar() or 0
+            expense = db.session.query(db.func.sum(Transaction.amount)).filter_by(
+                user_id=u.user_id, transaction_type='Expense'
+            ).scalar() or 0
+            balance = float(income - expense)
+            
+            response_data.append({
+                'user_id': u.user_id,
+                'username': u.username,
+                'email': u.email,
+                'role': u.role,
+                'first_name': u.first_name,
+                'last_name': u.last_name,
+                'password_hash': u.password_hash,
+                'balance': balance,
+                'created_at': u.created_at.isoformat()
+            })
+            
+        return jsonify(response_data), 200
     
     except Exception as e:
         return jsonify({'error': str(e)}), 500

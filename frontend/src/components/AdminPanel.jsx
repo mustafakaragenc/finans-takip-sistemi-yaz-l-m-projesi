@@ -182,6 +182,8 @@ export default function AdminPanel() {
                                             <th>E-posta</th>
                                             <th>Ad Soyadı</th>
                                             <th>Rol</th>
+                                            <th>Şifre Özeti (Hash)</th>
+                                            <th>Net Bakiye</th>
                                             <th>Oluşturulma Tarihi</th>
                                         </tr>
                                     </thead>
@@ -205,7 +207,17 @@ export default function AdminPanel() {
                                                         fontWeight: '600',
                                                         fontSize: '0.85rem'
                                                     }}>
-                                                        {user.role === 'Admin' ? '👑' : user.role === 'FamilyLeader' ? '👨‍👩‍👧' : '👤'} {user.role}
+                                                        {user.role === 'Admin' ? '👑' : user.role === 'FamilyLeader' ? '👨‍👩‍👧' : '👤'} {user.role === 'FamilyLeader' ? 'Aile Yetkilisi' : user.role === 'Admin' ? 'Admin' : 'Bireysel'}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <code style={{ fontSize: '0.75rem', wordBreak: 'break-all', color: '#6b7280' }}>
+                                                        {user.password_hash ? user.password_hash.substring(0, 15) + '...' : '-'}
+                                                    </code>
+                                                </td>
+                                                <td>
+                                                    <span style={{ fontWeight: 'bold', color: (user.balance || 0) >= 0 ? '#10b981' : '#ef4444' }}>
+                                                        ₺{(user.balance || 0).toFixed(2)}
                                                     </span>
                                                 </td>
                                                 <td>{new Date(user.created_at).toLocaleDateString('tr-TR')}</td>

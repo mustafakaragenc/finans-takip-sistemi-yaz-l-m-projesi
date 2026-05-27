@@ -21,7 +21,8 @@ def register():
             email=data.get('email'),
             password=data.get('password'),
             first_name=data.get('first_name'),
-            last_name=data.get('last_name')
+            last_name=data.get('last_name'),
+            role=data.get('role', 'Individual')
         )
         
         LoggingService.log_action('USER_REGISTERED', user.user_id, f'{user.username} kaydoldu')

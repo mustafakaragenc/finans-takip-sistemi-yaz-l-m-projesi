@@ -26,8 +26,8 @@ apiClient.interceptors.request.use(
 
 // ============ Kimlik Doğrulama ============
 export const authService = {
-    register: (username, email, password, firstName, lastName) =>
-        apiClient.post('/auth/register', { username, email, password, first_name: firstName, last_name: lastName }),
+    register: (username, email, password, firstName, lastName, role = 'Individual') =>
+        apiClient.post('/auth/register', { username, email, password, first_name: firstName, last_name: lastName, role }),
     
     login: (username, password) =>
         apiClient.post('/auth/login', { username, password }),
@@ -78,7 +78,13 @@ export const familyService = {
         apiClient.post('/family/invite', { group_id: groupId, invited_user_id: userId }),
     
     getGroupMembers: (groupId) =>
-        apiClient.get(`/family/groups/${groupId}/members`)
+        apiClient.get(`/family/groups/${groupId}/members`),
+
+    getGroups: () =>
+        apiClient.get('/family/groups'),
+
+    getEligibleUsers: () =>
+        apiClient.get('/family/eligible-users')
 };
 
 // ============ Admin ============

@@ -47,22 +47,53 @@ def create_transaction():
 @transaction_bp.route('', methods=['GET'])
 @jwt_required()
 def get_transactions():
-    """Kullanıcının tüm işlemlerini getir"""
-    user_id = get_jwt_identity()
-    
-    transactions = Transaction.query.filter_by(user_id=user_id).order_by(
-        Transaction.transaction_date.desc()
-    ).all()
-    
-    return jsonify([{
-        'transaction_id': t.transaction_id,
-        'category_id': t.category_id,
-        'category_name': t.category.category_name if t.category else f'Kategori {t.category_id}',
-        'amount': float(t.amount),
-        'transaction_type': t.transaction_type,
-        'description': t.description,
-        'transaction_date': t.transaction_date.isoformat()
-    } for t in transactions]), 200
+    """Kullanıcının tüm işlemlerini getir (Aile liderleri için grup üyelerinin işlemlerini de getirir)"""
+    try:
+        user_id = get_jwt_identity()
+        user = User.query.get(user_id)
+        
+        if not user:
+            return jsonify({'error': 'Kullanıcı bulunamadı'}), 404
+            
+        user_ids = [user_id]
+        
+        if user.role == 'FamilyLeader':
+            group = FamilyGroup.query.filter_by(leader_id=user_id).first()
+            if group:
+                members = FamilyMember.query.filter_by(group_id=group.group_id).all()
+                user_ids.extend([m.user_id for m in members])
+        elif user.role == 'Admin':
+            # Admin her şeyi görsün
+            transactions = Transaction.query.order_by(Transaction.transaction_date.desc()).all()
+            return jsonify([{
+                'transaction_id': t.transaction_id,
+                'user_id': t.user_id,
+                'user_fullname': f"{t.user.first_name} {t.user.last_name}" if t.user else 'Bilinmeyen',
+                'category_id': t.category_id,
+                'category_name': t.category.category_name if t.category else f'Kategori {t.category_id}',
+                'amount': float(t.amount),
+                'transaction_type': t.transaction_type,
+                'description': t.description,
+                'transaction_date': t.transaction_date.isoformat()
+            } for t in transactions]), 200
+
+        transactions = Transaction.query.filter(Transaction.user_id.in_(user_ids)).order_by(
+            Transaction.transaction_date.desc()
+        ).all()
+        
+        return jsonify([{
+            'transaction_id': t.transaction_id,
+            'user_id': t.user_id,
+            'user_fullname': f"{t.user.first_name} {t.user.last_name}" if t.user else 'Bilinmeyen',
+            'category_id': t.category_id,
+            'category_name': t.category.category_name if t.category else f'Kategori {t.category_id}',
+            'amount': float(t.amount),
+            'transaction_type': t.transaction_type,
+            'description': t.description,
+            'transaction_date': t.transaction_date.isoformat()
+        } for t in transactions]), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @transaction_bp.route('/<int:transaction_id>', methods=['PUT'])
 @jwt_required()

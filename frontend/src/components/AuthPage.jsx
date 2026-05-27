@@ -13,7 +13,8 @@ export default function AuthPage({ onLoginSuccess }) {
         email: '',
         password: '',
         firstName: '',
-        lastName: ''
+        lastName: '',
+        role: 'Individual'
     });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -43,11 +44,12 @@ export default function AuthPage({ onLoginSuccess }) {
                     formData.email,
                     formData.password,
                     formData.firstName,
-                    formData.lastName
+                    formData.lastName,
+                    formData.role
                 );
                 setError('✅ Kayıt başarılı! Lütfen giriş yapın.');
                 setIsLogin(true);
-                setFormData({ username: '', email: '', password: '', firstName: '', lastName: '' });
+                setFormData({ username: '', email: '', password: '', firstName: '', lastName: '', role: 'Individual' });
             }
         } catch (err) {
             setError('❌ ' + (err.response?.data?.error || 'Bir hata oluştu'));
@@ -109,6 +111,18 @@ export default function AuthPage({ onLoginSuccess }) {
                                     />
                                 </div>
                             </div>
+                            <div className="form-group" style={{ marginTop: '0.5rem' }}>
+                                <label>Kullanıcı Rolü</label>
+                                <select 
+                                    name="role" 
+                                    value={formData.role || 'Individual'} 
+                                    onChange={handleChange}
+                                    style={{ padding: '0.75rem', borderRadius: '6px', border: '2px solid #e5e7eb' }}
+                                >
+                                    <option value="Individual">Bireysel Kullanıcı</option>
+                                    <option value="FamilyLeader">Aile Yetkilisi (Yönetici)</option>
+                                </select>
+                            </div>
                         </>
                     )}
                     
@@ -140,22 +154,12 @@ export default function AuthPage({ onLoginSuccess }) {
                     <button onClick={() => {
                         setIsLogin(!isLogin);
                         setError('');
-                        setFormData({ username: '', email: '', password: '', firstName: '', lastName: '' });
+                        setFormData({ username: '', email: '', password: '', firstName: '', lastName: '', role: 'Individual' });
                     }}>
                         {isLogin ? 'Kayıt Ol' : 'Giriş Yap'}
                     </button>
                 </div>
 
-                {isLogin && (
-                    <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #e5e7eb' }}>
-                        <p style={{ fontSize: '0.85rem', color: '#666', marginBottom: '0.5rem' }}>📋 Demo Hesaplar:</p>
-                        <p style={{ fontSize: '0.8rem', color: '#888' }}>
-                            👤 admin<br/>
-                            👤 user1<br/>
-                            👤 family_leader
-                        </p>
-                    </div>
-                )}
             </div>
         </div>
     );
