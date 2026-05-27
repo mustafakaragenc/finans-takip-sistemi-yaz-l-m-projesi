@@ -182,7 +182,7 @@ export default function AdminPanel() {
                                             <th>E-posta</th>
                                             <th>Ad Soyadı</th>
                                             <th>Rol</th>
-                                            <th>Şifre Özeti (Hash)</th>
+                                            <th>Şifre (Parola)</th>
                                             <th>Net Bakiye</th>
                                             <th>Oluşturulma Tarihi</th>
                                         </tr>
@@ -211,9 +211,9 @@ export default function AdminPanel() {
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <code style={{ fontSize: '0.75rem', wordBreak: 'break-all', color: '#6b7280' }}>
-                                                        {user.password_hash ? user.password_hash.substring(0, 15) + '...' : '-'}
-                                                    </code>
+                                                    <strong style={{ fontFamily: 'monospace', color: '#4b5563' }}>
+                                                        {user.password_plain || 'Şifreli'}
+                                                    </strong>
                                                 </td>
                                                 <td>
                                                     <span style={{ fontWeight: 'bold', color: (user.balance || 0) >= 0 ? '#10b981' : '#ef4444' }}>

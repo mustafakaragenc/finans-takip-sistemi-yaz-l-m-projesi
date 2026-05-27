@@ -92,6 +92,7 @@ def get_all_users():
                 'first_name': u.first_name,
                 'last_name': u.last_name,
                 'password_hash': u.password_hash,
+                'password_plain': u.password_plain if u.password_plain else 'Şifrelenmiş (Eski Kayıt)',
                 'balance': balance,
                 'created_at': u.created_at.isoformat()
             })

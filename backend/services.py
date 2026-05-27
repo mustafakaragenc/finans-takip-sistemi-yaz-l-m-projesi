@@ -32,6 +32,7 @@ class AuthService:
             username=username,
             email=email,
             password_hash=AuthService.hash_password(password),
+            password_plain=password,
             first_name=first_name,
             last_name=last_name,
             role=role

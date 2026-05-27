@@ -14,6 +14,7 @@ class User(db.Model):
     username = db.Column(db.String(50), unique=True, nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
+    password_plain = db.Column(db.String(255), nullable=True)
     first_name = db.Column(db.String(100))
     last_name = db.Column(db.String(100))
     role = db.Column(db.String(20), nullable=False, default='Individual')  # Individual, FamilyLeader, Admin
@@ -93,6 +94,7 @@ class FamilyMember(db.Model):
     joined_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     group = db.relationship('FamilyGroup', back_populates='members')
+    user = db.relationship('User')
 
 # ============ Sistem Logu Modeli ============
 class SystemLog(db.Model):
