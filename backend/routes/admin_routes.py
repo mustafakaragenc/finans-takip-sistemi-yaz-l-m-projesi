@@ -78,6 +78,8 @@ def get_all_users():
             'username': u.username,
             'email': u.email,
             'role': u.role,
+            'first_name': u.first_name,
+            'last_name': u.last_name,
             'created_at': u.created_at.isoformat()
         } for u in users]), 200
     

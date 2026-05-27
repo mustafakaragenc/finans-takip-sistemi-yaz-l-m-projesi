@@ -64,6 +64,7 @@ nav h1 {
     color: var(--white);
     font-size: 1.5rem;
     font-weight: 700;
+    white-space: nowrap;
 }
 
 nav div:first-child {

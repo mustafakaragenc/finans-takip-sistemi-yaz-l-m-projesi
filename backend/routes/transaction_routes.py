@@ -57,6 +57,7 @@ def get_transactions():
     return jsonify([{
         'transaction_id': t.transaction_id,
         'category_id': t.category_id,
+        'category_name': t.category.category_name if t.category else f'Kategori {t.category_id}',
         'amount': float(t.amount),
         'transaction_type': t.transaction_type,
         'description': t.description,

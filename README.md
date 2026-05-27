@@ -87,3 +87,6 @@ Uygulama ilk ayağa kalktığında veritabanında rolü `Admin` olan ilk yetkili
 * **Bütçe Alarmları:** Belirlenen kategori bütçesinin %80'i ve üzeri aşıldığında sistem otomatik bildirim/alarm üretir.
 * **Aile Yönetimi:** Yalnızca `FamilyLeader` rolündeki kullanıcı aile grubu oluşturabilir ve diğer üyeleri (`Individual`) grubuna davet edebilir.
 * **Loglama:** Yapılan tüm kritik işlemler (giriş, harcama kaydı, bütçe aşımı vb.) Admin'in inceleyebilmesi için otomatik olarak `SystemLogs` tablosuna kaydedilir.
+
+
+-- backend çalıştırmak için .\venv\Scripts\python.exe app.py 

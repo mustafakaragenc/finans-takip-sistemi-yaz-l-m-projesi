@@ -33,7 +33,7 @@ export default function App() {
             {isLoggedIn && (
                 <nav>
                     <div>
-                        <h1>💰 Finans Takip</h1>
+                        <h1 style={{ whiteSpace: 'nowrap' }}>Finans Takip</h1>
                         <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                             <button onClick={() => navigate('/dashboard')} className="btn-primary">📊 Dashboard</button>
                             <button onClick={() => navigate('/transactions')} className="btn-primary">💳 İşlemler</button>

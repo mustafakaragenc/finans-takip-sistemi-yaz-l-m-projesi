@@ -95,7 +95,7 @@ export default function Dashboard() {
                                 const percentage = (spent / budget.monthly_limit * 100).toFixed(1);
                                 return (
                                     <tr key={budget.budget_id}>
-                                        <td>Kat {budget.category_id}</td>
+                                        <td>{budget.category_name || `Kategori ${budget.category_id}`}</td>
                                         <td>₺{parseFloat(budget.monthly_limit).toFixed(2)}</td>
                                         <td>₺{spent.toFixed(2)}</td>
                                         <td><span className="badge badge-info">{percentage}%</span></td>
@@ -129,9 +129,9 @@ export default function Dashboard() {
                                 <tr key={t.transaction_id}>
                                     <td>{new Date(t.transaction_date).toLocaleDateString('tr-TR')}</td>
                                     <td><span className={`badge ${t.transaction_type === 'Income' ? 'badge-income' : 'badge-expense'}`}>
-                                        {t.transaction_type}
+                                        {t.transaction_type === 'Income' ? 'Gelir' : 'Gider'}
                                     </span></td>
-                                    <td>Kat {t.category_id}</td>
+                                    <td>{t.category_name || `Kategori ${t.category_id}`}</td>
                                     <td>{t.description}</td>
                                     <td>₺{parseFloat(t.amount).toFixed(2)}</td>
                                 </tr>

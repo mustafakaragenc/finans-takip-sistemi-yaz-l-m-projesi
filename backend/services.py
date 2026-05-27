@@ -25,6 +25,9 @@ class AuthService:
         if User.query.filter_by(username=username).first():
             raise ValueError('Kullanıcı adı zaten kullanılmaktadır')
         
+        if User.query.filter_by(email=email).first():
+            raise ValueError('E-posta adresi zaten kullanılmaktadır')
+        
         user = User(
             username=username,
             email=email,

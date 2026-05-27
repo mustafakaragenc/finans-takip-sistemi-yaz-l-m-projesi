@@ -179,7 +179,7 @@ export default function BudgetManagement() {
                             return (
                                 <div key={budget.budget_id} className="card">
                                     <div className="card-header">
-                                        <h3 className="card-title">Kategori {budget.category_id}</h3>
+                                        <h3 className="card-title">{budget.category_name || `Kategori ${budget.category_id}`}</h3>
                                         <span className="badge badge-info">{budget.month_year}</span>
                                     </div>
 

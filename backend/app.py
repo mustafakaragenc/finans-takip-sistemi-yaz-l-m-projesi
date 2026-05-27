@@ -43,9 +43,29 @@ app.register_blueprint(budget_bp, url_prefix='/api/budget')
 app.register_blueprint(family_bp, url_prefix='/api/family')
 app.register_blueprint(admin_bp, url_prefix='/api/admin')
 
-# Veritabanı tabloları oluştur
+# Veritabanı tabloları oluştur ve varsayılan kategorileri yükle
 with app.app_context():
     db.create_all()
+    from models import Category
+    if not Category.query.first():
+        default_categories = [
+            (1, "Maaş", "Aylik maas gelirleri", True),
+            (2, "Yemek", "Yemek ve gida harcamalari", False),
+            (3, "Ulaşım", "Toplu tasima ve yakit harcamalari", False),
+            (4, "Kira", "Ev kirasi odemesi", False),
+            (5, "Fatura", "Elektrik, su, internet vb. faturalar", False),
+            (6, "Eğlence", "Sinema, tiyatro, konser vb. eglence harcamalari", False),
+            (7, "Sağlık", "Eczane ve hastane harcamalari", False),
+            (8, "Diğer", "Diger harcamalar", False)
+        ]
+        for cid, cname, desc, is_default in default_categories:
+            db.session.add(Category(
+                category_id=cid,
+                category_name=cname,
+                description=desc,
+                is_system_default=is_default
+            ))
+        db.session.commit()
 
 # Temel Rota
 @app.route('/api/health', methods=['GET'])

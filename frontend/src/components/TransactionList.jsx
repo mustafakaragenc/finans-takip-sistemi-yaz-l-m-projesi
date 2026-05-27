@@ -172,8 +172,8 @@ export default function TransactionList() {
                             {transactions.map(t => (
                                 <tr key={t.transaction_id}>
                                     <td>{new Date(t.transaction_date).toLocaleDateString('tr-TR')}</td>
-                                    <td><span className={`badge ${t.transaction_type === 'Income' ? 'badge-income' : 'badge-expense'}`}>{t.transaction_type}</span></td>
-                                    <td>Kat {t.category_id}</td>
+                                    <td><span className={`badge ${t.transaction_type === 'Income' ? 'badge-income' : 'badge-expense'}`}>{t.transaction_type === 'Income' ? 'Gelir' : 'Gider'}</span></td>
+                                    <td>{t.category_name || `Kategori ${t.category_id}`}</td>
                                     <td>{t.description}</td>
                                     <td>₺{parseFloat(t.amount).toFixed(2)}</td>
                                     <td>

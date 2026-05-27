@@ -20,7 +20,7 @@ with app.app_context():
         {
             'username': 'admin',
             'email': 'admin@finans.com',
-            'password': 'Admin123!',
+            'password': 'admin123',
             'first_name': 'Yönetici',
             'last_name': 'Sistem',
             'role': 'Admin'

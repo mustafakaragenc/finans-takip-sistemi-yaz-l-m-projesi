@@ -46,6 +46,7 @@ def get_budget_limits():
     return jsonify([{
         'budget_id': b.budget_id,
         'category_id': b.category_id,
+        'category_name': b.category.category_name if b.category else f'Kategori {b.category_id}',
         'monthly_limit': float(b.monthly_limit),
         'month_year': b.month_year
     } for b in budgets]), 200

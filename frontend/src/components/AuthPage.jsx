@@ -120,7 +120,7 @@ export default function AuthPage({ onLoginSuccess }) {
                             value={formData.password}
                             onChange={handleChange}
                             required
-                            placeholder="Güçlü bir şifre girin"
+                            placeholder={isLogin ? "Şifrenizi girin" : "Güçlü bir şifre girin"}
                         />
                     </div>
                     
@@ -150,9 +150,9 @@ export default function AuthPage({ onLoginSuccess }) {
                     <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #e5e7eb' }}>
                         <p style={{ fontSize: '0.85rem', color: '#666', marginBottom: '0.5rem' }}>📋 Demo Hesaplar:</p>
                         <p style={{ fontSize: '0.8rem', color: '#888' }}>
-                            👤 admin / Admin123!<br/>
-                            👤 user1 / User123!<br/>
-                            👤 family_leader / Leader123!
+                            👤 admin<br/>
+                            👤 user1<br/>
+                            👤 family_leader
                         </p>
                     </div>
                 )}

@@ -63,6 +63,7 @@ export default function AdminPanel() {
     }
 
     const getActionColor = (action) => {
+        if (!action) return '#3b82f6';
         if (action.includes('SUCCESS') || action.includes('CREATED')) return '#10b981';
         if (action.includes('FAILED') || action.includes('ERROR')) return '#ef4444';
         if (action.includes('DELETE')) return '#f59e0b';
@@ -134,7 +135,7 @@ export default function AdminPanel() {
                                     <tbody>
                                         {logs.map((log, idx) => (
                                             <tr key={idx}>
-                                                <td>{new Date(log.timestamp).toLocaleString('tr-TR')}</td>
+                                                <td>{new Date(log.created_at).toLocaleString('tr-TR')}</td>
                                                 <td>
                                                     <span className="badge badge-info">
                                                         ID: {log.user_id || 'Sistem'}
@@ -142,14 +143,14 @@ export default function AdminPanel() {
                                                 </td>
                                                 <td>
                                                     <span style={{
-                                                        backgroundColor: getActionColor(log.action),
+                                                        backgroundColor: getActionColor(log.action_type),
                                                         color: 'white',
                                                         padding: '0.4rem 0.8rem',
                                                         borderRadius: '4px',
                                                         fontWeight: 'bold',
                                                         fontSize: '0.85rem'
                                                     }}>
-                                                        {log.action}
+                                                        {log.action_type}
                                                     </span>
                                                 </td>
                                                 <td>{log.details || '-'}</td>
