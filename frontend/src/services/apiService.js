@@ -54,7 +54,10 @@ export const transactionService = {
         apiClient.put(`/transactions/${id}`, { amount, description }),
     
     delete: (id) =>
-        apiClient.delete(`/transactions/${id}`)
+        apiClient.delete(`/transactions/${id}`),
+    
+    getCategories: () =>
+        apiClient.get('/transactions/categories')
 };
 
 // ============ Bütçe ============
@@ -84,7 +87,10 @@ export const familyService = {
         apiClient.get('/family/groups'),
 
     getEligibleUsers: () =>
-        apiClient.get('/family/eligible-users')
+        apiClient.get('/family/eligible-users'),
+
+    removeMember: (groupId, userId) =>
+        apiClient.delete(`/family/groups/${groupId}/members/${userId}`)
 };
 
 // ============ Admin ============

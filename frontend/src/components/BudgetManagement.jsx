@@ -7,6 +7,7 @@ import { budgetService, transactionService } from '../services/apiService';
 
 export default function BudgetManagement() {
     const [budgets, setBudgets] = useState([]);
+    const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
     const [error, setError] = useState('');
@@ -26,14 +27,16 @@ export default function BudgetManagement() {
     const fetchData = async () => {
         try {
             setLoading(true);
-            const [budgetRes, transRes] = await Promise.all([
+            const [budgetRes, transRes, catRes] = await Promise.all([
                 budgetService.getLimits(),
-                transactionService.getAll()
+                transactionService.getAll(),
+                transactionService.getCategories().catch(() => ({ data: [] }))
             ]);
             setBudgets(budgetRes.data || []);
             setTransactions(transRes.data || []);
+            setCategories(catRes.data || []);
         } catch (err) {
-            setError('❌ Veri yüklenemedi');
+            setError('Veri yüklenemedi');
         } finally {
             setLoading(false);
         }
@@ -50,7 +53,7 @@ export default function BudgetManagement() {
                 parseFloat(formData.monthlyLimit),
                 formData.monthYear
             );
-            setSuccess('✅ Bütçe limiti ayarlandı!');
+            setSuccess('Bütçe limiti ayarlandı!');
             setFormData({
                 categoryId: 1,
                 monthlyLimit: '',
@@ -59,7 +62,7 @@ export default function BudgetManagement() {
             setShowForm(false);
             fetchData();
         } catch (err) {
-            setError('❌ İşlem başarısız: ' + (err.response?.data?.error || err.message));
+            setError('İşlem başarısız: ' + (err.response?.data?.error || err.message));
         }
     };
 
@@ -82,7 +85,7 @@ export default function BudgetManagement() {
 
     return (
         <div>
-            <h1>🎯 Bütçe Yönetimi</h1>
+            <h1>Bütçe Yönetimi</h1>
 
             {error && <div className="alert alert-error">{error}</div>}
             {success && <div className="alert alert-success">{success}</div>}
@@ -90,17 +93,28 @@ export default function BudgetManagement() {
             {/* Form */}
             {showForm && (
                 <form className="card" onSubmit={handleSubmit}>
-                    <h3>➕ Yeni Bütçe Limiti Ekle</h3>
+                    <h3>Yeni Bütçe Limiti Ekle</h3>
                     
                     <div className="form-row">
                         <div className="form-group">
-                            <label>Kategori ID</label>
-                            <input 
-                                type="number"
+                            <label>Kategori</label>
+                            <select 
                                 value={formData.categoryId}
                                 onChange={(e) => setFormData({...formData, categoryId: e.target.value})}
-                                min="1"
-                            />
+                            >
+                                {(categories.length > 0 ? categories : [
+                                    { category_id: 1, category_name: 'Maaş' },
+                                    { category_id: 2, category_name: 'Yemek' },
+                                    { category_id: 3, category_name: 'Ulaşım' },
+                                    { category_id: 4, category_name: 'Kira' },
+                                    { category_id: 5, category_name: 'Fatura' },
+                                    { category_id: 6, category_name: 'Eğlence' },
+                                    { category_id: 7, category_name: 'Sağlık' },
+                                    { category_id: 8, category_name: 'Diğer' }
+                                ]).map(c => (
+                                    <option key={c.category_id} value={c.category_id}>{c.category_name}</option>
+                                ))}
+                            </select>
                         </div>
                         <div className="form-group">
                             <label>Aylık Limit (₺)</label>
@@ -124,7 +138,7 @@ export default function BudgetManagement() {
 
                     <div style={{ display: 'flex', gap: '0.5rem' }}>
                         <button type="submit" className="btn-success">
-                            💾 Kaydet
+                            Kaydet
                         </button>
                         <button 
                             type="button" 
@@ -134,7 +148,7 @@ export default function BudgetManagement() {
                                 setError('');
                             }}
                         >
-                            ❌ İptal
+                            İptal
                         </button>
                     </div>
                 </form>
@@ -147,14 +161,14 @@ export default function BudgetManagement() {
                     onClick={() => setShowForm(true)}
                     style={{ marginBottom: '1rem' }}
                 >
-                    ➕ Yeni Bütçe Ekle
+                    Yeni Bütçe Ekle
                 </button>
             )}
 
             {/* Bütçeler Listesi */}
             <div className="card">
                 <div className="card-header">
-                    <h3 className="card-title">📋 Aktif Bütçe Limitleri ({budgets.length})</h3>
+                    <h3 className="card-title">Aktif Bütçe Limitleri ({budgets.length})</h3>
                 </div>
 
                 {budgets.length > 0 ? (
@@ -216,7 +230,7 @@ export default function BudgetManagement() {
                                         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
                                             <span>Kalan: ₺{remaining.toFixed(2)}</span>
                                             <span style={{ color: statusColor, fontWeight: 'bold' }}>
-                                                {status === 'Normal' ? '✅ Normal' : status === 'Uyarı' ? '⚠️ Uyarı' : '❌ Aştı'}
+                                                {status === 'Normal' ? 'Normal' : status === 'Uyarı' ? 'Uyarı' : 'Aştı'}
                                             </span>
                                         </div>
                                     </div>
@@ -233,7 +247,7 @@ export default function BudgetManagement() {
 
             {/* Öneriler */}
             <div className="card mt-3">
-                <h3>💡 Bütçe Önerileri</h3>
+                <h3>Bütçe Önerileri</h3>
                 <p>
                     Kategorileriniz için aylık bütçe limitleri belirleyerek harcamalarınızı kontrol altında tutabilirsiniz.
                     Limit belirlediğiniz kategorilerde, harcamalarınız limitin %80'ine ulaştığında sistem sizi uyaracaktır.

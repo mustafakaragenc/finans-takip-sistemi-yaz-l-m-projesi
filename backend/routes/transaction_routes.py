@@ -5,7 +5,7 @@ GET/POST /api/transactions
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from services import TransactionService, LoggingService
-from models import Transaction, db
+from models import Transaction, User, FamilyGroup, FamilyMember, Category, db
 from datetime import datetime
 
 transaction_bp = Blueprint('transactions', __name__)
@@ -15,7 +15,7 @@ transaction_bp = Blueprint('transactions', __name__)
 def create_transaction():
     """Yeni işlem ekle"""
     try:
-        user_id = get_jwt_identity()
+        user_id = int(get_jwt_identity())
         data = request.get_json()
         
         # Tarihi parse et
@@ -49,7 +49,7 @@ def create_transaction():
 def get_transactions():
     """Kullanıcının tüm işlemlerini getir (Aile liderleri için grup üyelerinin işlemlerini de getirir)"""
     try:
-        user_id = get_jwt_identity()
+        user_id = int(get_jwt_identity())
         user = User.query.get(user_id)
         
         if not user:
@@ -100,7 +100,7 @@ def get_transactions():
 def update_transaction(transaction_id):
     """İşlemi güncelle"""
     try:
-        user_id = get_jwt_identity()
+        user_id = int(get_jwt_identity())
         transaction = Transaction.query.get(transaction_id)
         
         if not transaction or transaction.user_id != user_id:
@@ -125,7 +125,7 @@ def update_transaction(transaction_id):
 def delete_transaction(transaction_id):
     """İşlemi sil"""
     try:
-        user_id = get_jwt_identity()
+        user_id = int(get_jwt_identity())
         transaction = Transaction.query.get(transaction_id)
         
         if not transaction or transaction.user_id != user_id:
@@ -139,3 +139,18 @@ def delete_transaction(transaction_id):
     
     except Exception as e:
         return jsonify({'error': str(e)}), 400
+
+@transaction_bp.route('/categories', methods=['GET'])
+@jwt_required()
+def get_categories():
+    """Tüm kategorileri listele"""
+    try:
+        categories = Category.query.all()
+        return jsonify([{
+            'category_id': c.category_id,
+            'category_name': c.category_name,
+            'description': c.description,
+            'is_system_default': c.is_system_default
+        } for c in categories]), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500

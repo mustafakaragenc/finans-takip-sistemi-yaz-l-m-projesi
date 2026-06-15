@@ -3,6 +3,7 @@ import { transactionService } from '../services/apiService';
 
 export default function TransactionList() {
     const [transactions, setTransactions] = useState([]);
+    const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
     const [error, setError] = useState('');
@@ -20,6 +21,7 @@ export default function TransactionList() {
 
     useEffect(() => {
         fetchTransactions();
+        fetchCategories();
     }, []);
 
     const fetchTransactions = async () => {
@@ -28,9 +30,18 @@ export default function TransactionList() {
             setTransactions(response.data || []);
         } catch (error) {
             console.error('Hata:', error);
-            setError('❌ İşlemler yüklenemedi');
+            setError('İşlemler yüklenemedi');
         } finally {
             setLoading(false);
+        }
+    };
+
+    const fetchCategories = async () => {
+        try {
+            const response = await transactionService.getCategories();
+            setCategories(response.data || []);
+        } catch (error) {
+            console.error('Kategoriler yüklenemedi:', error);
         }
     };
 
@@ -42,7 +53,7 @@ export default function TransactionList() {
         try {
             if (editingId) {
                 await transactionService.update(editingId, parseFloat(formData.amount), formData.description);
-                setSuccess('✅ Güncellendi!');
+                setSuccess('Güncellendi!');
             } else {
                 await transactionService.create(
                     parseInt(formData.categoryId),
@@ -51,12 +62,12 @@ export default function TransactionList() {
                     formData.description,
                     formData.date
                 );
-                setSuccess('✅ Eklendi!');
+                setSuccess('Eklendi!');
             }
             resetForm();
             fetchTransactions();
         } catch (err) {
-            setError('❌ Hata: ' + (err.response?.data?.error || err.message));
+            setError('Hata: ' + (err.response?.data?.error || err.message));
         }
     };
 
@@ -64,10 +75,10 @@ export default function TransactionList() {
         if (window.confirm('Silmek istediğinize emin misiniz?')) {
             try {
                 await transactionService.delete(id);
-                setSuccess('✅ Silindi!');
+                setSuccess('Silindi!');
                 fetchTransactions();
             } catch (err) {
-                setError('❌ Silme hatası');
+                setError('Silme hatası');
             }
         }
     };
@@ -107,7 +118,7 @@ export default function TransactionList() {
 
     return (
         <div>
-            <h1>💳 İşlem Yönetimi</h1>
+            <h1>İşlem Yönetimi</h1>
 
             {error && <div className="alert alert-error">{error}</div>}
             {success && <div className="alert alert-success">{success}</div>}
@@ -124,8 +135,24 @@ export default function TransactionList() {
                             </select>
                         </div>
                         <div className="form-group">
-                            <label>Kategori ID</label>
-                            <input type="number" value={formData.categoryId} onChange={(e) => setFormData({...formData, categoryId: e.target.value})} />
+                            <label>Kategori</label>
+                            <select 
+                                value={formData.categoryId} 
+                                onChange={(e) => setFormData({...formData, categoryId: e.target.value})}
+                            >
+                                {(categories.length > 0 ? categories : [
+                                    { category_id: 1, category_name: 'Maaş' },
+                                    { category_id: 2, category_name: 'Yemek' },
+                                    { category_id: 3, category_name: 'Ulaşım' },
+                                    { category_id: 4, category_name: 'Kira' },
+                                    { category_id: 5, category_name: 'Fatura' },
+                                    { category_id: 6, category_name: 'Eğlence' },
+                                    { category_id: 7, category_name: 'Sağlık' },
+                                    { category_id: 8, category_name: 'Diğer' }
+                                ]).map(c => (
+                                    <option key={c.category_id} value={c.category_id}>{c.category_name}</option>
+                                ))}
+                            </select>
                         </div>
                         <div className="form-group">
                             <label>Miktar (₺)</label>
@@ -149,7 +176,7 @@ export default function TransactionList() {
                 </form>
             ) : (
                 <button className="btn-primary" onClick={() => setShowForm(true)} style={{ marginBottom: '1rem' }}>
-                    ➕ Yeni İşlem Ekle
+                    Yeni İşlem Ekle
                 </button>
             )}
 
@@ -180,8 +207,8 @@ export default function TransactionList() {
                                     <td>{t.description}</td>
                                     <td>₺{parseFloat(t.amount).toFixed(2)}</td>
                                     <td>
-                                        <button className="btn-warning btn-icon" onClick={() => handleEdit(t)}>✏️</button>
-                                        <button className="btn-danger btn-icon" onClick={() => handleDelete(t.transaction_id)}>🗑️</button>
+                                        <button className="btn-warning btn-icon" onClick={() => handleEdit(t)}>Düzenle</button>
+                                        <button className="btn-danger btn-icon" onClick={() => handleDelete(t.transaction_id)}>Sil</button>
                                     </td>
                                 </tr>
                             ))}

@@ -1,19 +1,25 @@
-/* 🎨 Ana Tema - Koyu Mavi + Beyaz */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+/* 🎨 Ana Tema - Adaçayı Yeşili + Beyaz */
 :root {
-    --primary: #1a3a52;
-    --primary-dark: #0f2437;
-    --primary-light: #2d5a7b;
-    --accent: #3b82f6;
-    --accent-hover: #2563eb;
+    --primary: #5c8363;
+    --primary-dark: #2f4c35;
+    --primary-light: #7da584;
+    --accent: #fcd34d;
+    --accent-hover: #f59e0b;
     --white: #ffffff;
-    --light-gray: #f3f4f6;
-    --dark-gray: #4b5563;
-    --border: #e5e7eb;
+    --light-gray: #edf5ee;
+    --dark-gray: #334155;
+    --border: #e2e8f0;
     --success: #10b981;
     --warning: #f59e0b;
     --danger: #ef4444;
-    --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
-    --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+    --shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
+    --shadow-lg: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.05);
+}
+
+html {
+    font-size: 14px;
 }
 
 * {
@@ -23,8 +29,8 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--primary);
+    font-family: 'Outfit', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8faf9;
     color: var(--dark-gray);
     min-height: 100vh;
 }
@@ -41,60 +47,161 @@ html, body, #root {
 
 /* 🧭 Navigation */
 nav {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    background: #ffffff;
     padding: 0;
-    box-shadow: var(--shadow-lg);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
     position: sticky;
     top: 0;
     z-index: 100;
-    border-bottom: 3px solid var(--accent);
+    border-bottom: 1px solid var(--border);
+    height: 60px;
+    min-height: 60px;
+    max-height: 60px;
+    overflow: hidden;
 }
 
-nav div {
+nav > div {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 2rem;
+    padding: 0 3rem;
     max-width: 1400px;
     margin: 0 auto;
     width: 100%;
+    height: 60px;
+    min-height: 60px;
+    max-height: 60px;
 }
 
 nav h1 {
-    color: var(--white);
-    font-size: 1.5rem;
+    color: var(--primary-dark);
+    font-size: 1.55rem !important;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    white-space: nowrap;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    line-height: 60px;
+    flex-shrink: 0;
+}
+
+/* Nav Menu Links in Middle */
+.nav-menu-links {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    height: 60px;
+    flex-shrink: 1;
+    flex-wrap: nowrap;
+    overflow: hidden;
+}
+
+.nav-link {
+    color: #4b5563;
+    font-weight: 600;
+    font-size: 0.95rem;
+    background: none;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: color 0.2s ease, background-color 0.2s ease;
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+    line-height: 1.4;
+}
+
+.nav-link:hover {
+    color: var(--primary);
+    background-color: var(--light-gray);
+}
+
+.nav-link.active {
+    color: var(--primary-dark);
+    /* font-weight değiştirmiyoruz — layout shift / titreme olmasın */
+    font-weight: 600;
+    background-color: var(--light-gray);
+    /* kalın görünsün ama genişlik değişmesin */
+    text-shadow: 0 0 0.5px var(--primary-dark), 0 0 0.5px var(--primary-dark);
+}
+
+/* User Profile on the right of navbar */
+.nav-user-profile {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-shrink: 0;
+    height: 60px;
+}
+
+.nav-user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+}
+
+.nav-avatar {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    max-width: 36px !important;
+    max-height: 36px !important;
+    flex-shrink: 0 !important;
+    aspect-ratio: 1 / 1 !important;
+    background-color: var(--light-gray);
+    color: var(--primary-dark);
     font-weight: 700;
+    border-radius: 50% !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    border: 1px solid #d0e6d4;
+}
+
+.nav-user-meta {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    flex-shrink: 0;
+}
+
+.nav-user-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #1f2937;
+    line-height: 1.2;
     white-space: nowrap;
 }
 
-nav div:first-child {
-    display: flex;
-    gap: 1rem;
+.nav-user-email {
+    font-size: 0.75rem;
+    color: #6b7280;
+    white-space: nowrap;
 }
 
-nav button {
-    background-color: var(--accent);
-    color: var(--white);
-    border: none;
-    padding: 0.6rem 1.2rem;
-    border-radius: 6px;
-    cursor: pointer;
+.nav-logout-btn {
+    background-color: #ffffff;
+    color: #374151;
+    border: 1px solid #d1d5db;
+    padding: 0.5rem 1.2rem;
+    border-radius: 9999px; /* oval */
+    font-size: 0.85rem;
     font-weight: 600;
-    transition: all 0.3s ease;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
-nav button:hover {
-    background-color: var(--accent-hover);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-}
-
-nav button:last-child {
-    background-color: var(--danger);
-}
-
-nav button:last-child:hover {
-    background-color: #dc2626;
+.nav-logout-btn:hover {
+    background-color: #f9fafb;
+    border-color: #9ca3af;
+    color: #111827;
 }
 
 /* 📄 Pages */
@@ -560,3 +667,397 @@ tbody tr:last-child td {
 .text-danger { color: var(--danger); }
 .text-warning { color: var(--warning); }
 .text-info { color: var(--accent); }
+
+/* ==========================================================================
+   🌟 SaaS Landing Page & Premium Layout Styles (Clean Sage Green Theme)
+   ========================================================================== */
+
+.landing-page-container {
+    min-height: 100vh;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+/* White Top Navigation Bar */
+.landing-topbar {
+    background: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    border-bottom: 1px solid var(--border);
+}
+
+.landing-topbar-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 3rem;
+    height: 78px;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.landing-topbar-logo {
+    font-size: 1.55rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    cursor: pointer;
+    color: var(--primary-dark);
+}
+
+.landing-topbar-logo:hover {
+    opacity: 0.85;
+}
+
+.landing-topbar-nav {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+/* Hero Section style - Full Width Banner with Green Gradient */
+.landing-hero-banner {
+    background: linear-gradient(135deg, #729774 0%, #8fb091 100%);
+    width: 100%;
+    padding: 3rem 2rem;
+    text-align: center;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.landing-hero-inner {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.hero-main-title {
+    font-size: 2.6rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #ffffff;
+    margin-bottom: 0.85rem;
+    letter-spacing: -1px;
+}
+
+.hero-main-subtitle {
+    font-size: 1.2rem;
+    font-style: italic;
+    font-weight: 500;
+    color: #ffe685; /* Beautiful golden yellow color matching image */
+    margin-bottom: 1.25rem;
+    line-height: 1.4;
+}
+
+.hero-main-description {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 1.5rem;
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Hero Action Buttons - Oval styled */
+.hero-btn-group {
+    display: flex;
+    gap: 1.25rem;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.hero-btn-primary {
+    background-color: #ffe066; /* Bright yellow */
+    color: #385a3b; /* Dark green text */
+    font-weight: 700;
+    padding: 0.9rem 2.4rem;
+    font-size: 1.05rem;
+    border-radius: 9999px; /* Oval */
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.hero-btn-primary:hover {
+    transform: translateY(-2px);
+    background-color: #ffd633;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+.hero-btn-secondary {
+    background-color: transparent;
+    border: 1.5px solid #ffffff;
+    color: #ffffff;
+    font-weight: 600;
+    padding: 0.9rem 2.4rem;
+    font-size: 1.05rem;
+    border-radius: 9999px; /* Oval */
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.hero-btn-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Features Section styling underneath the banner */
+.landing-features-section {
+    padding: 5rem 3rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    text-align: center;
+}
+
+.features-badge-pill {
+    background: #edf5ee;
+    border: 1px solid #d0e6d4;
+    padding: 0.4rem 1.2rem;
+    border-radius: 99px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #4c7c53;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    letter-spacing: 1px;
+}
+
+.features-section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2f4c35;
+    margin-bottom: 1rem;
+    font-family: 'Outfit', 'Segoe UI', serif;
+}
+
+.features-section-subtitle {
+    font-size: 1.1rem;
+    color: #64748b;
+    margin-bottom: 4rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Feature Cards Grid (3 cards horizontally) */
+.features-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    text-align: left;
+}
+
+.feature-card-clean {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    transition: all 0.3s ease;
+}
+
+.feature-card-clean:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    border-color: #cbd5e1;
+}
+
+.feature-card-clean h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #2f4c35;
+    margin-bottom: 1rem;
+    margin-top: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.feature-card-clean p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #4b5563;
+    margin: 0;
+}
+
+/* 🔐 Premium Glassmorphic Modal Overlay */
+.auth-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(15, 36, 55, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    animation: fadeInModal 0.25s forwards ease-out;
+}
+
+@keyframes fadeInModal {
+    to { opacity: 1; }
+}
+
+.auth-modal-card {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 24px;
+    padding: 3rem 2.5rem;
+    width: 100%;
+    max-width: 460px;
+    box-shadow: 0 30px 60px rgba(15, 36, 55, 0.15);
+    position: relative;
+    transform: translateY(20px);
+    animation: slideUpModal 0.25s forwards cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUpModal {
+    to { transform: translateY(0); }
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    color: #64748b;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+.modal-close-btn:hover {
+    background-color: rgba(0, 0, 0, 0.06);
+    color: var(--primary-dark);
+    transform: rotate(90deg);
+}
+
+.auth-modal-card h2 {
+    color: var(--primary-dark);
+    font-size: 2rem;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 2rem;
+    letter-spacing: -0.5px;
+    border: none;
+    padding-bottom: 0;
+    margin-top: 0;
+}
+
+.auth-modal-card form {
+    background: transparent;
+    border: none;
+    padding: 0;
+    box-shadow: none;
+    margin-bottom: 0;
+}
+
+.auth-modal-card label {
+    color: #4b5563;
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    display: block;
+    text-align: left;
+}
+
+.auth-modal-card input, .auth-modal-card select {
+    background: #ffffff;
+    border: 2px solid #e5e7eb;
+    color: var(--primary-dark);
+    padding: 0.85rem 1.15rem;
+    border-radius: 10px;
+    font-size: 1rem;
+    width: 100%;
+    margin-bottom: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.auth-modal-card input:focus, .auth-modal-card select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(92, 131, 99, 0.15);
+    background-color: rgba(92, 131, 99, 0.01);
+}
+
+.auth-modal-card select option {
+    background-color: #ffffff;
+    color: var(--primary-dark);
+}
+
+.auth-modal-card .auth-toggle {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+.auth-modal-card .auth-toggle button {
+    text-decoration: none;
+    font-weight: 700;
+    color: var(--primary);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: inherit;
+    padding: 0;
+    transition: all 0.2s ease;
+}
+
+.auth-modal-card .auth-toggle button:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+/* Responsive configurations */
+@media (max-width: 1024px) {
+    .landing-topbar-inner {
+        padding: 0 1.5rem;
+    }
+    
+    .features-grid-3 {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .hero-main-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-main-subtitle {
+        font-size: 1.25rem;
+    }
+    
+    .landing-hero-banner {
+        padding: 4rem 1.5rem;
+    }
+}
+
+
+

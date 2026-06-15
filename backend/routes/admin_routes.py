@@ -15,7 +15,7 @@ admin_bp = Blueprint('admin', __name__)
 def get_system_logs():
     """Sistem loglarını listele (Admin tarafından)"""
     try:
-        user_id = get_jwt_identity()
+        user_id = int(get_jwt_identity())
         user = User.query.get(user_id)
         
         if user.role != 'Admin':
@@ -41,7 +41,7 @@ def get_system_logs():
 def trigger_backup():
     """Veritabanı yedeklemesini başlat (Admin tarafından)"""
     try:
-        user_id = get_jwt_identity()
+        user_id = int(get_jwt_identity())
         user = User.query.get(user_id)
         
         if user.role != 'Admin':
@@ -65,7 +65,7 @@ def trigger_backup():
 def get_all_users():
     """Tüm kullanıcıları listele (Admin tarafından)"""
     try:
-        user_id = get_jwt_identity()
+        user_id = int(get_jwt_identity())
         user = User.query.get(user_id)
         
         if user.role != 'Admin':

@@ -90,4 +90,5 @@ Uygulama ilk ayağa kalktığında veritabanında rolü `Admin` olan ilk yetkili
 
 
 -- backend çalıştırmak için .\venv\Scripts\python.exe app.py 
---aile aile123  mustafa 123456 admin admin123 örnek şifreler 
+-- frontend içinde npm start    
+-- aile aile123  mustafa 123456 admin admin123 örnek şifreler 

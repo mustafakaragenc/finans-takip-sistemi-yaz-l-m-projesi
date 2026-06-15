@@ -38,7 +38,7 @@ export default function FamilyGroups() {
             }
         } catch (err) {
             console.error('Veri çekme hatası:', err);
-            setError('❌ Aile bilgileri yüklenemedi');
+            setError('Aile bilgileri yüklenemedi');
         } finally {
             setLoading(false);
         }
@@ -50,24 +50,24 @@ export default function FamilyGroups() {
         setSuccess('');
 
         if (userRole !== 'FamilyLeader' && userRole !== 'Admin') {
-            setError('❌ Sadece Aile Yöneticileri grup oluşturabilir');
+            setError('Sadece Aile Yöneticileri grup oluşturabilir');
             return;
         }
 
         try {
             await familyService.createGroup(formData.groupName, formData.description);
-            setSuccess('✅ Grup başarıyla oluşturuldu!');
+            setSuccess('Grup başarıyla oluşturuldu!');
             setFormData({ groupName: '', description: '', selectedUserId: '' });
             setShowForm(false);
             fetchData();
         } catch (err) {
-            setError('❌ Grup oluşturulamadı: ' + (err.response?.data?.error || err.message));
+            setError('Grup oluşturulamadı: ' + (err.response?.data?.error || err.message));
         }
     };
 
     const handleAddMember = async (groupId, userId) => {
         if (!userId) {
-            setError('❌ Lütfen eklenecek bir kullanıcı seçin');
+            setError('Lütfen eklenecek bir kullanıcı seçin');
             return;
         }
 
@@ -75,11 +75,27 @@ export default function FamilyGroups() {
             setError('');
             setSuccess('');
             await familyService.inviteMember(groupId, parseInt(userId));
-            setSuccess('✅ Üye aileye başarıyla eklendi!');
+            setSuccess('Üye aileye başarıyla eklendi!');
             setFormData({ ...formData, selectedUserId: '' });
             fetchData();
         } catch (err) {
-            setError('❌ Üye eklenemedi: ' + (err.response?.data?.error || err.message));
+            setError('Üye eklenemedi: ' + (err.response?.data?.error || err.message));
+        }
+    };
+
+    const handleRemoveMember = async (groupId, userId) => {
+        if (!window.confirm('Bu üyeyi aile grubundan çıkarmak istediğinize emin misiniz?')) {
+            return;
+        }
+
+        try {
+            setError('');
+            setSuccess('');
+            await familyService.removeMember(groupId, userId);
+            setSuccess('Üye aileden başarıyla çıkarıldı!');
+            fetchData();
+        } catch (err) {
+            setError('Üye çıkarılamadı: ' + (err.response?.data?.error || err.message));
         }
     };
 
@@ -94,7 +110,7 @@ export default function FamilyGroups() {
 
     return (
         <div>
-            <h1>👨‍👩‍👧‍👦 Aile Grubu Yönetimi</h1>
+            <h1>Aile Grubu Yönetimi</h1>
 
             {error && <div className="alert alert-error">{error}</div>}
             {success && <div className="alert alert-success">{success}</div>}
@@ -104,7 +120,7 @@ export default function FamilyGroups() {
                 <>
                     {showForm ? (
                         <form className="card" onSubmit={handleCreateGroup}>
-                            <h3>➕ Yeni Grup Oluştur</h3>
+                            <h3>Yeni Grup Oluştur</h3>
                             
                             <div className="form-row">
                                 <div className="form-group">
@@ -130,7 +146,7 @@ export default function FamilyGroups() {
 
                             <div style={{ display: 'flex', gap: '0.5rem' }}>
                                 <button type="submit" className="btn-success">
-                                    💾 Oluştur
+                                    Oluştur
                                 </button>
                                 <button 
                                     type="button"
@@ -140,7 +156,7 @@ export default function FamilyGroups() {
                                         setError('');
                                     }}
                                 >
-                                    ❌ İptal
+                                    İptal
                                 </button>
                             </div>
                         </form>
@@ -150,7 +166,7 @@ export default function FamilyGroups() {
                             onClick={() => setShowForm(true)}
                             style={{ marginBottom: '1rem' }}
                         >
-                            ➕ Yeni Aile Grubu Oluştur
+                            Yeni Aile Grubu Oluştur
                         </button>
                     )}
                 </>
@@ -159,7 +175,7 @@ export default function FamilyGroups() {
             {/* Gruplar Listesi */}
             <div className="card">
                 <div className="card-header">
-                    <h3 className="card-title">📋 Aile Gruplarınız ({groups.length})</h3>
+                    <h3 className="card-title">Aile Gruplarınız ({groups.length})</h3>
                 </div>
 
                 {groups.length > 0 ? (
@@ -167,7 +183,7 @@ export default function FamilyGroups() {
                         {groups.map(group => (
                             <div key={group.group_id} className="card" style={{ borderLeft: '4px solid var(--accent)' }}>
                                 <div className="card-header">
-                                    <h3 className="card-title" style={{ color: 'var(--primary)' }}>👥 {group.group_name}</h3>
+                                    <h3 className="card-title" style={{ color: 'var(--primary)' }}>{group.group_name}</h3>
                                 </div>
 
                                 <p style={{ marginBottom: '1rem', color: '#666', fontSize: '0.95rem' }}>
@@ -176,12 +192,46 @@ export default function FamilyGroups() {
 
                                 {/* Üyeler Bölümü */}
                                 <div style={{ marginBottom: '1.5rem', background: '#f9fafb', padding: '1rem', borderRadius: '6px' }}>
-                                    <h4 style={{ color: 'var(--primary-light)', marginBottom: '0.5rem', fontSize: '0.95rem' }}>👪 Aile Üyeleri:</h4>
+                                    <h4 style={{ color: 'var(--primary-light)', marginBottom: '0.5rem', fontSize: '0.95rem' }}>Aile Üyeleri:</h4>
                                     {group.members && group.members.length > 0 ? (
-                                        <ul style={{ paddingLeft: '1.2rem', fontSize: '0.9rem' }}>
+                                        <ul style={{ paddingLeft: '0', listStyle: 'none', fontSize: '0.9rem' }}>
                                             {group.members.map(member => (
-                                                <li key={member.user_id} style={{ marginBottom: '0.25rem' }}>
-                                                    <strong>{member.fullname}</strong> (@{member.username})
+                                                <li key={member.user_id} style={{ 
+                                                    marginBottom: '0.75rem', 
+                                                    display: 'flex', 
+                                                    alignItems: 'center', 
+                                                    justifyContent: 'space-between', 
+                                                    borderBottom: '1px dashed #e5e7eb', 
+                                                    paddingBottom: '0.75rem' 
+                                                }}>
+                                                    <div>
+                                                        <strong>{member.fullname}</strong> (@{member.username})<br/>
+                                                        <span style={{ fontSize: '0.8rem', color: '#6b7280' }}>{member.email}</span>
+                                                        <span style={{ 
+                                                            fontSize: '0.85rem', 
+                                                            color: (member.balance || 0) >= 0 ? '#10b981' : '#ef4444', 
+                                                            marginLeft: '1rem', 
+                                                            fontWeight: 'bold' 
+                                                        }}>
+                                                            Bakiyeniz: ₺{(member.balance || 0).toFixed(2)}
+                                                        </span>
+                                                    </div>
+                                                    {(userRole === 'FamilyLeader' || userRole === 'Admin') && (
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => handleRemoveMember(group.group_id, member.user_id)}
+                                                            style={{
+                                                                background: 'none',
+                                                                border: 'none',
+                                                                color: 'var(--danger)',
+                                                                cursor: 'pointer',
+                                                                fontSize: '0.8rem',
+                                                                fontWeight: '600'
+                                                            }}
+                                                        >
+                                                            Çıkar
+                                                        </button>
+                                                    )}
                                                 </li>
                                             ))}
                                         </ul>
@@ -214,7 +264,7 @@ export default function FamilyGroups() {
                                                 style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}
                                                 disabled={!formData.selectedUserId}
                                             >
-                                                ➕ Ekle
+                                                Ekle
                                             </button>
                                         </div>
                                     </div>
@@ -231,7 +281,7 @@ export default function FamilyGroups() {
 
             {/* Bilgilendirme */}
             <div className="card mt-3">
-                <h3>ℹ️ Aile Grubu Yönetimi Bilgileri</h3>
+                <h3>Aile Grubu Yönetimi Bilgileri</h3>
                 <ul style={{ marginLeft: '1.5rem', fontSize: '0.95rem', lineHeight: '1.6' }}>
                     <li><strong>Aile Yetkilisi (Yönetici):</strong> Yeni aile bütçesi oluşturabilir ve sistemdeki bağımsız üyeleri doğrudan seçerek ailesine ekleyebilir.</li>
                     <li><strong>Aile Üyeleri:</strong> Aile grubuna dahil olduklarında, harcamaları aile bütçesinde izlenir.</li>
@@ -241,7 +291,7 @@ export default function FamilyGroups() {
 
             {userRole !== 'FamilyLeader' && userRole !== 'Admin' && (
                 <div className="alert alert-warning mt-3">
-                    <strong>💡 Not:</strong> Şu anda "Bireysel Kullanıcı" rolündesiniz. Aile grubu kurabilmek için kayıt olurken "Aile Yetkilisi" rolünü seçmeniz gerekmektedir.
+                    <strong>Not:</strong> Şu anda "Bireysel Kullanıcı" rolündesiniz. Aile grubu kurabilmek için kayıt olurken "Aile Yetkilisi" rolünü seçmeniz gerekmektedir.
                 </div>
             )}
         </div>

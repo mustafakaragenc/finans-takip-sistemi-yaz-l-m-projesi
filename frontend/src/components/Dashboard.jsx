@@ -53,7 +53,7 @@ export default function Dashboard() {
 
     return (
         <div>
-            <h1>📊 Finans Dashboard</h1>
+            <h1>Finans Dashboard</h1>
 
             <div className="card-stats">
                 <div className="stat-box">
@@ -78,7 +78,7 @@ export default function Dashboard() {
 
             <div className="card">
                 <div className="card-header">
-                    <h3 className="card-title">🎯 Bütçe Limitleri</h3>
+                    <h3 className="card-title">Bütçe Limitleri</h3>
                 </div>
                 {budgetLimits.length > 0 ? (
                     <table>
@@ -112,7 +112,7 @@ export default function Dashboard() {
 
             <div className="card">
                 <div className="card-header">
-                    <h3 className="card-title">💳 Son İşlemler</h3>
+                    <h3 className="card-title">Son İşlemler</h3>
                 </div>
                 {transactions.length > 0 ? (
                     <table>
@@ -138,7 +138,7 @@ export default function Dashboard() {
                                     <td>{t.description}</td>
                                     <td>₺{parseFloat(t.amount).toFixed(2)}</td>
                                 </tr>
-                            ))}
+                              ))}
                         </tbody>
                     </table>
                 ) : (

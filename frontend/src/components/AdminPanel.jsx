@@ -24,7 +24,7 @@ export default function AdminPanel() {
             setError('');
 
             if (userRole !== 'Admin') {
-                setError('❌ Bu sayfaya erişim yetkiniz yok');
+                setError('Bu sayfaya erişim yetkiniz yok');
                 return;
             }
 
@@ -36,7 +36,7 @@ export default function AdminPanel() {
                 setUsers(response.data || []);
             }
         } catch (err) {
-            setError('❌ Veri yüklenemedi: ' + (err.response?.data?.error || err.message));
+            setError('Veri yüklenemedi: ' + (err.response?.data?.error || err.message));
         } finally {
             setLoading(false);
         }
@@ -46,17 +46,17 @@ export default function AdminPanel() {
         try {
             setError('');
             await adminService.triggerBackup();
-            setSuccess('✅ Yedekleme başlatıldı!');
+            setSuccess('Yedekleme başlatıldı!');
             setTimeout(() => setSuccess(''), 3000);
         } catch (err) {
-            setError('❌ Yedekleme başarısız');
+            setError('Yedekleme başarısız');
         }
     };
 
     if (userRole !== 'Admin') {
         return (
             <div className="alert alert-error">
-                <strong>❌ Yetkisiz Erişim</strong><br/>
+                <strong>Yetkisiz Erişim</strong><br/>
                 Bu panele sadece Sistem Yöneticileri erişebilir.
             </div>
         );
@@ -72,7 +72,7 @@ export default function AdminPanel() {
 
     return (
         <div>
-            <h1>⚙️ Admin Paneli</h1>
+            <h1>Admin Paneli</h1>
 
             {error && <div className="alert alert-error">{error}</div>}
             {success && <div className="alert alert-success">{success}</div>}
@@ -87,7 +87,7 @@ export default function AdminPanel() {
                             fetchAdminData();
                         }}
                     >
-                        📋 Sistem Logları
+                        Sistem Logları
                     </button>
                     <button 
                         className={activeTab === 'users' ? 'btn-primary' : 'btn-secondary'}
@@ -96,14 +96,14 @@ export default function AdminPanel() {
                             fetchAdminData();
                         }}
                     >
-                        👥 Kullanıcılar
+                        Kullanıcılar
                     </button>
                     <button 
                         className="btn-success"
                         onClick={handleBackup}
                         style={{ marginLeft: 'auto' }}
                     >
-                        💾 Yedekleme Başlat
+                        Yedekleme Başlat
                     </button>
                 </div>
             </div>
@@ -119,7 +119,7 @@ export default function AdminPanel() {
                     {activeTab === 'logs' && (
                         <div className="card">
                             <div className="card-header">
-                                <h3 className="card-title">📋 Son {logs.length} Log Kaydı</h3>
+                                <h3 className="card-title">Son {logs.length} Log Kaydı</h3>
                             </div>
 
                             {logs.length > 0 ? (
@@ -170,7 +170,7 @@ export default function AdminPanel() {
                     {activeTab === 'users' && (
                         <div className="card">
                             <div className="card-header">
-                                <h3 className="card-title">👥 Sistem Kullanıcıları ({users.length})</h3>
+                                <h3 className="card-title">Sistem Kullanıcıları ({users.length})</h3>
                             </div>
 
                             {users.length > 0 ? (
@@ -207,7 +207,7 @@ export default function AdminPanel() {
                                                         fontWeight: '600',
                                                         fontSize: '0.85rem'
                                                     }}>
-                                                        {user.role === 'Admin' ? '👑' : user.role === 'FamilyLeader' ? '👨‍👩‍👧' : '👤'} {user.role === 'FamilyLeader' ? 'Aile Yetkilisi' : user.role === 'Admin' ? 'Admin' : 'Bireysel'}
+                                                        {user.role === 'FamilyLeader' ? 'Aile Yetkilisi' : user.role === 'Admin' ? 'Admin' : 'Bireysel'}
                                                     </span>
                                                 </td>
                                                 <td>
@@ -246,7 +246,7 @@ export default function AdminPanel() {
                     <div className="stat-label">Son Log Kayıtları</div>
                 </div>
                 <div className="stat-box">
-                    <div className="stat-value">✅</div>
+                    <div className="stat-value">Aktif</div>
                     <div className="stat-label">Sistem Durumu: Aktif</div>
                 </div>
             </div>

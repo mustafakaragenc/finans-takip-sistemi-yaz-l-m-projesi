@@ -21,8 +21,13 @@ load_dotenv()
 app = Flask(__name__)
 
 # CORS ayarları - Frontend'in backend ile iletişim kurabilmesi için
+allowed_origins = ["http://localhost:3000", "http://localhost:3001"]
+frontend_url = os.getenv('FRONTEND_URL')
+if frontend_url:
+    allowed_origins.append(frontend_url)
+
 CORS(app, resources={r"/api/*": {
-    "origins": ["http://localhost:3000", "http://localhost:3001"],
+    "origins": allowed_origins,
     "allow_headers": ["Content-Type", "Authorization"],
     "expose_headers": ["Content-Type", "Authorization"]
 }})

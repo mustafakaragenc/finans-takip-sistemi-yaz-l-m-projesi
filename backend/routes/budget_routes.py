@@ -16,7 +16,7 @@ budget_bp = Blueprint('budget', __name__)
 def set_budget_limit():
     """Kategori için aylık bütçe limiti belirle"""
     try:
-        user_id = get_jwt_identity()
+        user_id = int(get_jwt_identity())
         data = request.get_json()
         
         budget = BudgetLimit(
@@ -39,7 +39,7 @@ def set_budget_limit():
 @jwt_required()
 def get_budget_limits():
     """Kullanıcının bütçe limitlerini getir"""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     
     budgets = BudgetLimit.query.filter_by(user_id=user_id).all()
     
@@ -55,7 +55,7 @@ def get_budget_limits():
 @jwt_required()
 def get_monthly_report(year, month):
     """Aylık harcama raporu"""
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     
     report = TransactionService.get_monthly_report(user_id, year, month)
     

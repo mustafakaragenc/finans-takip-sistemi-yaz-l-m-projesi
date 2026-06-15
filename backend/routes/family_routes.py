@@ -15,7 +15,7 @@ family_bp = Blueprint('family', __name__)
 def create_family_group():
     """Yeni aile grubu oluştur (FamilyLeader tarafından)"""
     try:
-        user_id = get_jwt_identity()
+        user_id = int(get_jwt_identity())
         user = User.query.get(user_id)
         
         if user.role != 'FamilyLeader':
@@ -42,7 +42,7 @@ def create_family_group():
 def invite_member():
     """Aile grubuna üye davet et"""
     try:
-        user_id = get_jwt_identity()
+        user_id = int(get_jwt_identity())
         data = request.get_json()
         
         group = FamilyGroup.query.get(data.get('group_id'))
@@ -84,7 +84,7 @@ def get_group_members(group_id):
 def get_family_groups():
     """Kullanıcının üye olduğu veya yönettiği aile gruplarını listele"""
     try:
-        user_id = get_jwt_identity()
+        user_id = int(get_jwt_identity())
         user = User.query.get(user_id)
         
         if user.role == 'FamilyLeader' or user.role == 'Admin':
@@ -94,6 +94,7 @@ def get_family_groups():
             group_ids = [m.group_id for m in memberships]
             groups = FamilyGroup.query.filter(FamilyGroup.group_id.in_(group_ids)).all() if group_ids else []
             
+        from models import Transaction
         return jsonify([{
             'group_id': g.group_id,
             'group_name': g.group_name,
@@ -103,7 +104,9 @@ def get_family_groups():
             'members': [{
                 'user_id': m.user_id,
                 'username': m.user.username if m.user else 'Bilinmeyen',
-                'fullname': f"{m.user.first_name} {m.user.last_name}" if m.user else 'Bilinmeyen'
+                'fullname': f"{m.user.first_name} {m.user.last_name}" if m.user else 'Bilinmeyen',
+                'email': m.user.email if m.user else '-',
+                'balance': float((db.session.query(db.func.sum(Transaction.amount)).filter_by(user_id=m.user_id, transaction_type='Income').scalar() or 0) - (db.session.query(db.func.sum(Transaction.amount)).filter_by(user_id=m.user_id, transaction_type='Expense').scalar() or 0)) if m.user else 0.0
             } for m in g.members]
         } for g in groups]), 200
     except Exception as e:
@@ -134,3 +137,26 @@ def get_eligible_users():
         } for u in users.all()]), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+@family_bp.route('/groups/<int:group_id>/members/<int:invited_user_id>', methods=['DELETE'])
+@jwt_required()
+def remove_member(group_id, invited_user_id):
+    """Aile grubundan üye çıkar"""
+    try:
+        user_id = int(get_jwt_identity())
+        group = FamilyGroup.query.get(group_id)
+        if not group or group.leader_id != user_id:
+            return jsonify({'error': 'Grup bulunamadı veya yetkiniz yok'}), 404
+        
+        member = FamilyMember.query.filter_by(group_id=group_id, user_id=invited_user_id).first()
+        if not member:
+            return jsonify({'error': 'Üye grupta bulunamadı'}), 404
+        
+        db.session.delete(member)
+        db.session.commit()
+        
+        LoggingService.log_action('FAMILY_MEMBER_REMOVED', user_id, f'Kullanıcı {invited_user_id} gruptan çıkarıldı')
+        
+        return jsonify({'message': 'Üye gruptan çıkarıldı'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
